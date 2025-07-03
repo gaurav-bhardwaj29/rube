@@ -40,6 +40,16 @@ function love.load()
       domino.fixture:setFriction(0.8)
       table.insert(objects.dominoes, domino)
     end
+    -- Seesaw and pivot
+    objects.seesaw = {}
+    objects.seesaw.body = love.physics.newBody(world, 700, 550, "dynamic")
+    objects.seesaw.shape = love.physics.newRectangleShape(200, 20)
+    objects.seesaw.fixture = love.physics.newFixture(objects.seesaw.body, objects.seesaw.shape, 1)
+    objects.seesaw.body:setMass(0.5)
+
+    objects.seesaw.pivot = love.physics.newBody(world, 700, 550, "static")
+    objects.seesaw.joint = love.physics.newRevoluteJoint(objects.seesaw.pivot, objects.seesaw.body, 700, 550, false)
+
 end
   
 function love.update(dt)
@@ -58,5 +68,7 @@ function love.draw()
       love.graphics.setColor(0.9, 0.6, 0.3)
       love.graphics.polygon("fill", domino.body:getWorldPoints(domino.shape:getPoints()))
     end
+    love.graphics.setColor(0.5, 0.3, 0.1)
+    love.graphics.polygon("fill", objects.seesaw.body:getWorldPoints(objects.seesaw.shape:getPoints()))
 end
 
