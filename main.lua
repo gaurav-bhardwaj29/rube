@@ -27,13 +27,26 @@ function love.load()
     objects.ramp.shape = love.physics.newPolygonShape(-150, -10, 150, 10, 150, -10, -150, 10) 
     objects.ramp.fixture = love.physics.newFixture(objects.ramp.body, objects.ramp.shape)
     objects.ramp.body:setAngle(-math.pi / 6)
-  end
+
+    -- Dominos
+    objects.dominoes = {}
+    local startX = 300
+    for i = 1, 6 do
+      local domino = {}
+      domino.body = love.physics.newBody(world, startX + (i * 25), 500, "dynamic")
+      domino.shape = love.physics.newRectangleShape(5, 40)
+      domino.fixture = love.physics.newFixture(domino.body, domino.shape, 0.3)
+      domino.fixture:setRestitution(0.1)
+      domino.fixture:setFriction(0.8)
+      table.insert(objects.dominoes, domino)
+    end
+end
   
-  function love.update(dt)
+function love.update(dt)
     world:update(dt)
-  end
+end
   
-  function love.draw()
+function love.draw()
     love.graphics.setColor(0.6, 0.2, 0.1) 
     love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape:getPoints()))
   
@@ -41,5 +54,9 @@ function love.load()
     love.graphics.circle("fill", objects.ball.body:getX(), objects.ball.body:getY(), objects.ball.shape:getRadius())
     love.graphics.setColor(0.5, 0.5, 0.5) 
     love.graphics.polygon("fill", objects.ramp.body:getWorldPoints(objects.ramp.shape:getPoints()))
-  end
-  
+    for _, domino in ipairs(objects.dominoes) do
+      love.graphics.setColor(0.9, 0.6, 0.3)
+      love.graphics.polygon("fill", domino.body:getWorldPoints(domino.shape:getPoints()))
+    end
+end
+
